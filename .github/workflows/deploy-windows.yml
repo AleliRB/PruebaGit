@@ -1,0 +1,33 @@
+name: Entrega Continua de sitio web HTML en Windows
+
+on:
+  push:
+    branches:
+      - main  # Se ejecuta cada vez que haces push a main
+
+jobs:
+  deploy:
+    runs-on: windows-latest  # Usa un runner de Windows
+
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: 🧪 Verificar archivos
+        run: dir
+
+      - name: Copiar archivos a carpeta de "servidor"
+        shell: pwsh
+        run: |
+          Write-Host "Simulando despliegue de sitio web..."
+          if (-Not (Test-Path -Path 'C:\deploy-html')) {
+            New-Item -ItemType Directory -Path 'C:\deploy-html' | Out-Null
+          }
+          Copy-Item -Path *.html -Destination 'C:\deploy-html\' -Force
+          Copy-Item -Path *.css -Destination 'C:\deploy-html\' -Force
+          Copy-Item -Path *.js -Destination 'C:\deploy-html\' -Force
+          Write-Host "Archivos desplegados en C:\deploy-html"
+          Get-ChildItem -Path C:\deploy-html
+
+      - name: ✅ Confirmar despliegue exitoso
+        run: echo "Sitio HTML desplegado correctamente en Windows Runner 🚀"
